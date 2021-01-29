@@ -2523,7 +2523,7 @@
        */
       showTabDropdown = lm.utils.fnBind( this._showAdditionalTabsDropdown, this );
       tabDropdownLabel = this.layoutManager.config.labels.tabDropdown;
-      this.tabDropdownButton = new lm.controls.HeaderButton( this, tabDropdownLabel, 'lm_tabdropdown', showTabDropdown );
+      this.tabDropdownButton = new lm.controls.HeaderButton( this, tabDropdownLabel, 'chevron_down', showTabDropdown );
       this.tabDropdownButton.element.hide();
 
       /**
@@ -2532,7 +2532,7 @@
       if( this._getHeaderSetting( 'popout' ) ) {
         popout = lm.utils.fnBind( this._onPopoutClick, this );
         label = this._getHeaderSetting( 'popout' );
-        new lm.controls.HeaderButton( this, label, 'lm_popout', popout );
+        new lm.controls.HeaderButton( this, label, 'popout', popout );
       }
 
       /**
@@ -2542,7 +2542,7 @@
         maximise = lm.utils.fnBind( this.parent.toggleMaximise, this.parent );
         maximiseLabel = this._getHeaderSetting( 'maximise' );
         minimiseLabel = this._getHeaderSetting( 'minimise' );
-        maximiseButton = new lm.controls.HeaderButton( this, maximiseLabel, 'lm_maximise', maximise );
+        maximiseButton = new lm.controls.HeaderButton( this, maximiseLabel, 'maximise', maximise );
 
         this.parent.on( 'maximised', function() {
           maximiseButton.element.attr( 'title', minimiseLabel );
@@ -2559,7 +2559,7 @@
       if( this._isClosable() ) {
         closeStack = lm.utils.fnBind( this.parent.remove, this.parent );
         label = this._getHeaderSetting( 'close' );
-        this.closeButton = new lm.controls.HeaderButton( this, label, 'lm_close', closeStack );
+        this.closeButton = new lm.controls.HeaderButton( this, label, 'close', closeStack );
       }
     },
 
@@ -2678,7 +2678,7 @@
 
   lm.controls.HeaderButton = function( header, label, cssClass, action ) {
     this._header = header;
-    this.element = $( '<li class="' + cssClass + '" title="' + label + '"></li>' );
+    this.element = $( '<div class="lm_control icon icon-' + cssClass + '" title="' + label + '"></div>' );
     this._header.on( 'destroy', this._$destroy, this );
     this._action = action;
     this.element.on( 'click touchstart', this._action );
@@ -2773,9 +2773,9 @@
    *
    * @type {String}
    */
-  lm.controls.Tab._template = '<li class="lm_tab"><i class="lm_left"></i>' +
-    '<span class="lm_title"></span><div class="lm_close_tab"></div>' +
-    '<i class="lm_right"></i></li>';
+  lm.controls.Tab._template = '<li class="lm_tab">' +
+    '<span class="lm_title"></span><div class="lm_control icon icon-close"></div>' +
+    '</li>';
 
   lm.utils.copy( lm.controls.Tab.prototype, {
 
