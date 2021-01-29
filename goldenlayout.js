@@ -1262,10 +1262,13 @@
      * @returns {void}
      */
     _adjustToWindowMode: function() {
-      var popInButton = $( '<div class="lm_popin" title="' + this.config.labels.popin + '">' +
+      var popInButton = $('<div class="lm_popin" title="Stack back to mimosa">' +
+        '<div class="icon icon-popin"></div>' +
+        '</div>');
+      /*var popInButton = $( '<!div class="lm_popin" title="' + this.config.labels.popin + '">' +
         '<div class="lm_icon"></div>' +
         '<div class="lm_bg"></div>' +
-        '</div>' );
+        '</div>' );*/
 
       popInButton.click( lm.utils.fnBind( function() {
         this.emit( 'popIn' );
@@ -1532,9 +1535,9 @@
       popoutWholeStack: false,
       blockedPopoutsThrowError: true,
       closePopoutsOnUnload: true,
-      showPopoutIcon: true,
-      showMaximiseIcon: true,
-      showCloseIcon: true,
+      showPopoutIcon: false,
+      showMaximiseIcon: false,
+      showCloseIcon: false,
       responsiveMode: 'onload' // Can be onload, always, or none.
     },
     dimensions: {
@@ -2044,7 +2047,7 @@
         this.element.find( '.lm_content' ).after( this.element.find( '.lm_header' ) );
     }
     this.element.css( { left: x, top: y } );
-    this.element.find( '.lm_tab' ).attr( 'title', lm.utils.stripTags( this._contentItem.config.title ) );
+    //this.element.find( '.lm_tab' ).attr( 'title', lm.utils.stripTags( this._contentItem.config.title ) );
     this.element.find( '.lm_title' ).html( this._contentItem.config.title );
     this.childElementContainer = this.element.find( '.lm_content' );
     this.childElementContainer.append( contentItem.element );
@@ -2531,7 +2534,7 @@
        */
       if( this._getHeaderSetting( 'popout' ) ) {
         popout = lm.utils.fnBind( this._onPopoutClick, this );
-        label = this._getHeaderSetting( 'popout' );
+        label = this.layoutManager.config.labels.popout;
         new lm.controls.HeaderButton( this, label, 'popout', popout );
       }
 
@@ -2540,16 +2543,16 @@
        */
       if( this._getHeaderSetting( 'maximise' ) ) {
         maximise = lm.utils.fnBind( this.parent.toggleMaximise, this.parent );
-        maximiseLabel = this._getHeaderSetting( 'maximise' );
-        minimiseLabel = this._getHeaderSetting( 'minimise' );
+        maximiseLabel = this.layoutManager.config.labels.maximise;
+        minimiseLabel = this.layoutManager.config.labels.minimise;
         maximiseButton = new lm.controls.HeaderButton( this, maximiseLabel, 'maximise', maximise );
 
         this.parent.on( 'maximised', function() {
-          maximiseButton.element.attr( 'title', minimiseLabel );
+          maximiseButton.element.attr( 'title', minimiseLabel);
         } );
 
         this.parent.on( 'minimised', function() {
-          maximiseButton.element.attr( 'title', maximiseLabel );
+          maximiseButton.element.attr( 'title', maximiseLabel);
         } );
       }
 
@@ -2558,7 +2561,7 @@
        */
       if( this._isClosable() ) {
         closeStack = lm.utils.fnBind( this.parent.remove, this.parent );
-        label = this._getHeaderSetting( 'close' );
+        label = this.layoutManager.config.labels.closeStack
         this.closeButton = new lm.controls.HeaderButton( this, label, 'close', closeStack );
       }
     },
@@ -2731,6 +2734,7 @@
     this.element = $( lm.controls.Tab._template );
     this.titleElement = this.element.find( '.lm_title' );
     this.closeElement = this.element.find( '.lm_close_tab' );
+    this.closeElement.attr('title', header.layoutManager.config.labels.close);
     this.closeElement[ contentItem.config.isClosable ? 'show' : 'hide' ]();
     this.isActive = false;
 
@@ -2774,7 +2778,7 @@
    * @type {String}
    */
   lm.controls.Tab._template = '<li class="lm_tab">' +
-    '<span class="lm_title"></span><div class="lm_control icon icon-close"></div>' +
+    '<span class="lm_title"></span><div class="lm_close_tab lm_control icon icon-close"></div>' +
     '</li>';
 
   lm.utils.copy( lm.controls.Tab.prototype, {
@@ -2788,7 +2792,7 @@
      * @param {String} title can contain html
      */
     setTitle: function( title ) {
-      this.element.attr( 'title', lm.utils.stripTags( title ) );
+      //this.element.attr( 'title', lm.utils.stripTags( title ) );
       this.titleElement.html( title );
     },
 
