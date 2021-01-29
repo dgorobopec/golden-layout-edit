@@ -1883,8 +1883,6 @@
           height: this._dimensions.height,
           innerWidth: this._dimensions.width,
           innerHeight: this._dimensions.height,
-          /*left: (screen.width / 2 ) - (this._dimensions.width / 2),
-          top: (screen.height / 2 ) - (this._dimensions.height / 2),*/
           menubar: 'no',
           toolbar: 'no',
           location: 'no',
@@ -1893,7 +1891,7 @@
           scrollbars: 'no',
           status: 'no'
         } );
-      console.log(options);
+
       this._popoutWindow = window.open( url, title, options );
 
       if( !this._popoutWindow ) {
