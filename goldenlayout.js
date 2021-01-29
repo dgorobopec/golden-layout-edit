@@ -1262,13 +1262,10 @@
      * @returns {void}
      */
     _adjustToWindowMode: function() {
-      var popInButton = $('<div class="lm_popin" title="Stack back to mimosa">' +
-        '<div class="icon icon-popin"></div>' +
+      var popInButton = $('<div class="lm_popin">' +
+        '<div class="icon icon-popin">' +
+        '<span class="tooltip top">Stack back to mimosa</span></div>' +
         '</div>');
-      /*var popInButton = $( '<!div class="lm_popin" title="' + this.config.labels.popin + '">' +
-        '<div class="lm_icon"></div>' +
-        '<div class="lm_bg"></div>' +
-        '</div>' );*/
 
       popInButton.click( lm.utils.fnBind( function() {
         this.emit( 'popIn' );
@@ -1886,6 +1883,8 @@
           height: this._dimensions.height,
           innerWidth: this._dimensions.width,
           innerHeight: this._dimensions.height,
+          /*left: (screen.width / 2 ) - (this._dimensions.width / 2),
+          top: (screen.height / 2 ) - (this._dimensions.height / 2),*/
           menubar: 'no',
           toolbar: 'no',
           location: 'no',
@@ -1894,7 +1893,7 @@
           scrollbars: 'no',
           status: 'no'
         } );
-
+      console.log(options);
       this._popoutWindow = window.open( url, title, options );
 
       if( !this._popoutWindow ) {
@@ -1982,7 +1981,17 @@
      * @returns {void}
      */
     _positionWindow: function() {
-      this._popoutWindow.moveTo( this._dimensions.left, this._dimensions.top );
+      const dualScreenLeft = window.screenLeft !==  undefined ? window.screenLeft : window.screenX;
+      const dualScreenTop = window.screenTop !==  undefined   ? window.screenTop  : window.screenY;
+
+      const width = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+      const height = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+
+      const systemZoom = width / window.screen.availWidth;
+      const left = (width - this._dimensions.width) / 2 / systemZoom + dualScreenLeft
+      const top = (height - this._dimensions.height) / 2 / systemZoom + dualScreenTop
+
+      this._popoutWindow.moveTo( left, top );
       this._popoutWindow.focus();
     },
 
@@ -2681,7 +2690,7 @@
 
   lm.controls.HeaderButton = function( header, label, cssClass, action ) {
     this._header = header;
-    this.element = $( '<div class="lm_control icon icon-' + cssClass + '" title="' + label + '"></div>' );
+    this.element = $( '<div class="lm_control icon icon-' + cssClass + '"><span class="tooltip">' + label + '</span></div>' );
     this._header.on( 'destroy', this._$destroy, this );
     this._action = action;
     this.element.on( 'click touchstart', this._action );
@@ -2734,7 +2743,8 @@
     this.element = $( lm.controls.Tab._template );
     this.titleElement = this.element.find( '.lm_title' );
     this.closeElement = this.element.find( '.lm_close_tab' );
-    this.closeElement.attr('title', header.layoutManager.config.labels.close);
+    this.tooltipElement = this.element.find('.tooltip');
+    this.tooltipElement.append(header.layoutManager.config.labels.close);
     this.closeElement[ contentItem.config.isClosable ? 'show' : 'hide' ]();
     this.isActive = false;
 
@@ -2778,7 +2788,7 @@
    * @type {String}
    */
   lm.controls.Tab._template = '<li class="lm_tab">' +
-    '<span class="lm_title"></span><div class="lm_close_tab lm_control icon icon-close"></div>' +
+    '<span class="lm_title"></span><div class="lm_close_tab lm_control icon icon-close"><span class="tooltip left"></span></div>' +
     '</li>';
 
   lm.utils.copy( lm.controls.Tab.prototype, {
